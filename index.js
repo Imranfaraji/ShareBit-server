@@ -7,8 +7,8 @@ const port = 3000
 
 // middleware
 
-app.use=(cors())
-app.use=(express.json())
+app.use(cors())
+app.use(express.json())
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pztqlyl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -28,6 +28,15 @@ async function run() {
     
     const foodsCollection=client.db('foodShareCollection').collection('foods')
 
+    app.get('/featuredFoods', async(req,res)=>{
+         const query={
+          status:"available"
+         }
+
+         const result=await foodsCollection.find(query).sort({quantity:-1}).limit(6).toArray()
+         res.send(result)
+    })
+
 
     app.post('/foods', async(req,res)=>{
       const newFood=req.body;
@@ -44,7 +53,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Foods sharing server runnig!')
 })
 
 app.listen(port, () => {
