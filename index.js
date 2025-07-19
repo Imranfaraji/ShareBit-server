@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const admin = require("firebase-admin");
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors=require('cors')
 const app = express()
@@ -9,6 +10,33 @@ const port = 3000
 
 app.use(cors())
 app.use(express.json())
+
+
+
+const serviceAccount = require("./service-key.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+// jwt verify middleware
+
+const verifyToken=async(req,res,next)=>{
+  const authorize=req.headers.authorization
+  if(!authorize || !authorize.startaWith('Bearer')){
+    return res.status(401).send({message:"Unauthorize access"})
+  }
+  const token=authorize.split(' ')[1]
+  try{
+    const decoded=await admin.auth().verifyIdToken(token)
+    req.decoded=decoded
+    next()
+  }catch(error){
+    return res.status(401).send({message:"Unauthorize access"})
+
+  }
+}
+
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pztqlyl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -53,8 +81,12 @@ async function run() {
       res.send(result)
     })
 
-    app.get('/myrequest', async(req,res)=>{
+    app.get('/myrequest',verifyToken, async(req,res)=>{
       const email= req.query.email
+
+      if(email !== req.decoded.email){
+        return res.status(403).send({message:"Forbidden"})
+      }
       const query={userEmail:email}
       const result=await requestCollections.find(query).toArray()
       res.send(result)
