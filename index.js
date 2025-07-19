@@ -27,6 +27,7 @@ async function run() {
 
     
     const foodsCollection=client.db('foodShareCollection').collection('foods')
+    const requestCollections=client.db('foodShareCollection').collection('myRequestFood')
 
     app.get('/featuredFoods', async(req,res)=>{
          const query={
@@ -56,6 +57,12 @@ async function run() {
     app.post('/foods', async(req,res)=>{
       const newFood=req.body;
       const result=await foodsCollection.insertOne(newFood)
+      res.send(result)
+    })
+
+    app.post('/myrequest', async(req,res)=>{
+      const newRequest=req.body
+      const result=await requestCollections.insertOne(newRequest)
       res.send(result)
     })
     
