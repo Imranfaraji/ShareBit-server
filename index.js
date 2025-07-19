@@ -65,6 +65,16 @@ async function run() {
       const result=await requestCollections.insertOne(newRequest)
       res.send(result)
     })
+
+    app.patch('/foods/:id', async(req,res)=>{
+      const id=req.params.id;
+      const status=req.body
+      const result= await foodsCollection.updateOne(
+        {_id: new ObjectId(id)},
+        {$set:{status:status}}
+      )
+      res.send(result)
+    })
     
     
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
