@@ -117,11 +117,18 @@ async function run() {
 
     app.patch('/foods/:id', async(req,res)=>{
       const id=req.params.id;
-      const status=req.body
+      const {status}=req.body
       const result= await foodsCollection.updateOne(
         {_id: new ObjectId(id)},
-        {$set:{status:status}}
+        {$set:{status}}
       )
+      res.send(result)
+    })
+
+    app.delete('/foods/:id', async(req,res)=>{
+      const id=req.params.id;
+      const query= {_id: new ObjectId(id)}
+      const result= await foodsCollection.deleteOne(query)
       res.send(result)
     })
     
