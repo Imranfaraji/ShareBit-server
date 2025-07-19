@@ -53,6 +53,13 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/myrequest', async(req,res)=>{
+      const email= req.query.email
+      const query={userEmail:email}
+      const result=await requestCollections.find(query).toArray()
+      res.send(result)
+    })
+
 
     app.post('/foods', async(req,res)=>{
       const newFood=req.body;
