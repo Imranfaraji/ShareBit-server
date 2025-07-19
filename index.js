@@ -37,6 +37,14 @@ async function run() {
          res.send(result)
     })
 
+    app.get('/foods', async(req,res)=>{
+       const query={
+          status:"available"
+         }
+         const result=await foodsCollection.find(query).toArray()
+         res.send(result)
+    })
+
 
     app.post('/foods', async(req,res)=>{
       const newFood=req.body;
