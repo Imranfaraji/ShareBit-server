@@ -12,8 +12,8 @@ app.use(cors())
 app.use(express.json())
 
 
-
-const serviceAccount = require("./service-key.json");
+const decoded=Buffer.from(process.env.FB_SERVICE_KEY,'base64').toString('utf8')
+const serviceAccount = JSON.parse(decoded)
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -23,7 +23,7 @@ admin.initializeApp({
 
 const verifyToken=async(req,res,next)=>{
   const authorize=req.headers.authorization
-  if(!authorize || !authorize.startaWith('Bearer')){
+  if(!authorize || !authorize.startsWith('Bearer')){
     return res.status(401).send({message:"Unauthorize access"})
   }
   const token=authorize.split(' ')[1]
