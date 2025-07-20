@@ -92,8 +92,11 @@ async function run() {
       res.send(result)
     })
 
-    app.get('/mypostedfoods', async(req,res)=>{
+    app.get('/mypostedfoods',verifyToken, async(req,res)=>{
       const email=req.query.email
+      if(email !== req.decoded.email){
+        return res.status(403).send({message:"Forbidden"})
+      }
       const query={
         email:email
       }
