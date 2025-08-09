@@ -62,7 +62,7 @@ async function run() {
           status:"available"
          }
 
-         const result=await foodsCollection.find(query).sort({quantity:-1}).limit(6).toArray()
+         const result=await foodsCollection.find(query).sort({quantity:-1}).limit(8).toArray()
          res.send(result)
     })
 
