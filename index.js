@@ -56,6 +56,8 @@ async function run() {
     
     const foodsCollection=client.db('foodShareCollection').collection('foods')
     const requestCollections=client.db('foodShareCollection').collection('myRequestFood')
+    const reviewsCollections=client.db('foodShareCollection').collection('reviews')
+    const blogsCollections=client.db('foodShareCollection').collection('blogs')
 
     app.get('/featuredFoods', async(req,res)=>{
          const query={
@@ -102,6 +104,21 @@ async function run() {
       }
 
       const result=await foodsCollection.find(query).toArray()
+      res.send(result)
+    })
+
+
+    // reviews get api
+
+    app.get('/reviews', async(req,res)=>{
+      const result= await reviewsCollections.find().toArray()
+      res.send(result)
+    })
+
+    // blog api
+
+    app.get('/blogs', async(req,res)=>{
+      const result=await blogsCollections.find().toArray()
       res.send(result)
     })
 
