@@ -123,6 +123,14 @@ async function run() {
     })
 
 
+    app.get('/blogs/:id', async(req,res)=>{
+      const id=req.params.id;
+      const query={_id: new ObjectId(id)}
+      const result=await blogsCollections.findOne(query)
+      res.send(result)
+    })
+
+
     app.post('/foods', async(req,res)=>{
       const newFood=req.body;
       const result=await foodsCollection.insertOne(newFood)
